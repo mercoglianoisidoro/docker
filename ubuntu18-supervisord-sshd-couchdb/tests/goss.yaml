@@ -1,0 +1,49 @@
+file:
+  /data:
+    exists: true
+    mode: "0755"
+    size: 4096
+    filetype: directory
+    contains: []
+  /ssh-entrypoint.sh:
+    exists: true
+    mode: "0700"
+    owner: root
+    group: root
+    filetype: file
+    contains: []
+port:
+  tcp:22:
+    listening: true
+    ip:
+    - 0.0.0.0
+  tcp:5984:
+    listening: true
+    ip: []
+  tcp:9001:
+    listening: true
+    ip:
+    - 0.0.0.0
+  tcp6:22:
+    listening: true
+    ip:
+    - '::'
+user:
+  couchdb:
+    exists: true
+  sshd:
+    exists: true
+    gid: 65534
+    groups:
+    - nogroup
+process:
+  sshd:
+    running: true
+  supervisord:
+    running: true
+http:
+  http://localhost:5984:
+    status: 200
+    body:
+      - '"couchdb":"Welcome"'
+

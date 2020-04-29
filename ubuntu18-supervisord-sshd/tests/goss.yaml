@@ -1,0 +1,28 @@
+file:
+  /ssh-entrypoint.sh:
+    exists: true
+    mode: "0700"
+    owner: root
+    group: root
+    filetype: file
+    contains: []
+port:
+  tcp:22:
+    listening: true
+    ip:
+    - 0.0.0.0
+  tcp:9001:
+    listening: true
+    ip:
+    - 0.0.0.0
+user:
+  sshd:
+    exists: true
+    gid: 65534
+    groups:
+    - nogroup
+process:
+  sshd:
+    running: true
+  supervisord:
+    running: true

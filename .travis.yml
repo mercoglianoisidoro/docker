@@ -1,0 +1,72 @@
+sudo: required
+dist: trusty
+
+services:
+- docker
+
+before_install:
+# install goss
+- curl -L https://goss.rocks/install | sudo sh
+
+
+
+jobs:
+  include:
+    - stage: test-LocalBuild
+      name: test LocalBuild for sshd image
+      script:
+      - cd ubuntu18-supervisord-sshd
+      - docker build -t mercisi--ubuntu18-supervisord:sshd .
+      - cd tests
+      - sh test_local_image.sh
+
+    - stage: test-RemoteImage
+      name: test RemoteImage for sshd image
+      script:
+      - cd ubuntu18-supervisord-sshd/tests
+      - sh test.sh
+
+
+  #ubuntu18-supervisord-sshd-couchdb
+    - stage: test-LocalBuild
+      name: test LocalBuild for sshd-couchdb image
+      script:
+      - cd ubuntu18-supervisord-sshd-couchdb
+      - docker build -t mercisi--ubuntu18-supervisord:ssh-couchdb .
+      - cd tests
+      - sh test_local_image.sh
+
+    - stage: test-RemoteImage
+      name: test RemoteImage for sshd-couchdb image
+      script:
+      - cd ubuntu18-supervisord-sshd-couchdb/tests
+      - sh test.sh
+
+
+
+
+  #ubuntu18-supervisord-couchdb
+    - stage: test-LocalBuild
+      name: test LocalBuild for couchdb image
+      script:
+      - cd ubuntu18-couchdb
+      - docker build -t mercisi--ubuntu18-couchdb .
+      - cd tests
+      - sh test_local_image.sh
+
+    - stage: test-RemoteImage
+      name: test RemoteImage for couchdb image
+      script:
+      - cd ubuntu18-supervisord-sshd-couchdb/tests
+      - sh test.sh
+
+
+#ubuntu18-supervisord-couchdb
+    - stage: test-couchdb-functions
+      name: test-couchdb-functions
+      script:
+      - docker run -d -p 5984:5984 -e COUCHDB_USER=admin -e COUCHDB_PASSWORD=admin_pass mercisi/ubuntu18-supervisord:couchdb
+      - cd tools/bash_for_test_couchdb
+      - sh test_db.sh
+
+      
