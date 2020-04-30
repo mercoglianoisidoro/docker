@@ -12,6 +12,8 @@ before_install:
 
 jobs:
   include:
+  
+  #mercisi--ubuntu18-supervisord:sshd
     - stage: test-LocalBuild
       name: test LocalBuild for sshd image
       script:
@@ -61,11 +63,11 @@ jobs:
       - sh test.sh
 
 
-#ubuntu18-supervisord-couchdb
+#ubuntu18-couchdb
     - stage: test-couchdb-functions
       name: test-couchdb-functions
       script:
-      - docker run -d -p 5984:5984 -e COUCHDB_USER=admin -e COUCHDB_PASSWORD=admin_pass mercisi/ubuntu18-supervisord:couchdb
+      - docker run -d -p 5984:5984 -e COUCHDB_USER=admin -e COUCHDB_PASSWORD=admin_pass mercisi/ubuntu18:couchdb
       - cd tools/bash_for_test_couchdb
       - sh test_db.sh
 
