@@ -47,7 +47,7 @@ jobs:
 
 
 
-  #ubuntu18-supervisord-couchdb
+  #ubuntu18-couchdb
     - stage: test-LocalBuild
       name: test LocalBuild for couchdb image
       script:
@@ -59,11 +59,11 @@ jobs:
     - stage: test-RemoteImage
       name: test RemoteImage for couchdb image
       script:
-      - cd ubuntu18-supervisord-sshd-couchdb/tests
+      - cd ubuntu18-couchdb/tests
       - sh test.sh
 
 
-#ubuntu18-couchdb
+#ubuntu18-couchdb with tools/bash_for_test_couchdb
     - stage: test-couchdb-functions
       name: test-couchdb-functions
       script:
