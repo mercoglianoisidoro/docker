@@ -2,13 +2,13 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: sshd
-  name: sshd
+    app: couchdb
+  name: couchdb
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: sshd
+      app: couchdb
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -17,27 +17,20 @@ spec:
   template:
     metadata:
       labels:
-        app: sshd
+        app: couchdb
     spec:
       containers:
-      - image: mercisi/ubuntu18-supervisord:sshd
+      - image: mercisi/ubuntu18:couchdb
         imagePullPolicy: IfNotPresent
-        name: ubuntu18-supervisord
+        name: couchdb
         resources: {}
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
         ports:
-          - containerPort: 22
-        # envFrom:
-        # - configMapRef:
-        #     name: sshd-envs
+          - containerPort: 5984
         envFrom:
         - configMapRef:
-            name: sshd-envs
-
+            name: couchdb-envs
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
-      securityContext: {}
-      terminationGracePeriodSeconds: 30
-status: {}

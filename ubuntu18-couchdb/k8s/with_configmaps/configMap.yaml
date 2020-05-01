@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  COUCHDB_USER: admin
+  COUCHDB_PASSWORD: admin_pass
+kind: ConfigMap
+metadata:
+  name: couchdb-envs
