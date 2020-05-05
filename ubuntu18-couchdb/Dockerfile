@@ -10,9 +10,9 @@ RUN apt-get update &&  apt-get upgrade -y
 RUN apt-get --no-install-recommends -y install \
     build-essential pkg-config \
     libicu-dev libcurl4-openssl-dev \
-    git curl jq \
     gnupg libnspr4 libnspr4-dev libffi-dev \
-    erlang
+    erlang \
+    git curl jq vim
 
 
 #version 22
@@ -85,7 +85,7 @@ VOLUME ["/data"]
 EXPOSE 5984
 
 #special permission to open socker
-RUN addgroup --gid 3003 aid_inet && adduser couchdb aid_inet 
+RUN addgroup --gid 3003 aid_inet && adduser couchdb aid_inet
 
 
 COPY ./docker-entrypoint.sh /
