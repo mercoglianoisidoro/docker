@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: couchdb
+  name: couchdb
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: couchdb
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: couchdb
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - couchdb
+            topologyKey: "kubernetes.io/hostname"
+      containers:
+      - image: mercisi/ubuntu18:couchdb
+        imagePullPolicy: IfNotPresent
+        name: couchdb
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        ports:
+          - containerPort: 5984
+        envFrom:
+        - configMapRef:
+            name: couchdb-envs
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
