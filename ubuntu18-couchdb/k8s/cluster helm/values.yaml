@@ -1,0 +1,10 @@
+# Default values for cluster.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+
+namespaceToInstall: cdb6 #to review
+clientsAdminPassword: admin_pass
+serverAdminPassword: admin_pass
+
+replicaCount: 1

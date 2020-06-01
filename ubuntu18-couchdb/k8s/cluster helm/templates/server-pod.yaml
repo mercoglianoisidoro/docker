@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    app: couchdb-server
+  name: couchdb-server
+  # namespace: {{ .Values.namespaceToInstall }}
+spec:
+  initContainers:
+    - name: change-permission-container
+      image: alpine
+      command: ["sh", "-c", "rm -rf /data/* && chown 102:102 /data && ls -la /data"]
+      volumeMounts:
+      - mountPath: /data
+        name: couchdb-data
+  containers:
+  - image: mercisi/ubuntu18:couchdb
+    name: couchdb-server
+    ports:
+    - containerPort: 5984
+      name: default
+    - containerPort: 5986
+      name: administration
+    volumeMounts:
+    - mountPath: /data
+      name: couchdb-data
+    envFrom:
+    - configMapRef:
+        name: server-envs
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+  volumes:
+  - name: couchdb-data
+    hostPath:
+      path: /data
+  tolerations:
+  - key: node-role.kubernetes.io/master
+    effect: NoSchedule
+  nodeSelector:
+    node-role.kubernetes.io/master: ""

@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: couchdb
+  name: couchdb
+  # namespace: {{ .Values.namespaceToInstall }}
+spec:
+  replicas: 2
+  serviceName: "couchdb"
+  selector:
+    matchLabels:
+      app: couchdb
+  # strategy:
+  #   type: Recreate
+  template:
+    metadata:
+      labels:
+        app: couchdb
+    spec:
+      volumes:
+       - name: couchdb-clients-app-data
+         persistentVolumeClaim:
+          claimName: couchdb-clients-app-data-claim
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - couchdb
+            topologyKey: "kubernetes.io/hostname"
+      containers:
+      - image: mercisi/ubuntu18:couchdb
+        imagePullPolicy: IfNotPresent
+        name: couchdb
+        ports:
+          - containerPort: 5984
+            name: default
+          - containerPort: 5986
+            name: administration
+        envFrom:
+        - configMapRef:
+            name: client-envs
+      - image: alpine
+        imagePullPolicy: IfNotPresent
+        name: alpine
+        command: ['sh','-c','sleep 36000']
+        volumeMounts:
+        - mountPath: "/data"
+          name: couchdb-clients-app-data
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
